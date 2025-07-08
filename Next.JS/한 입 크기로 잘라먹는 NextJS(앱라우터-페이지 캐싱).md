@@ -1,3 +1,7 @@
+### 이정환 강사님의 한 입 크기로 잘라먹는 Next.js강의를 들으며 정리한 내용 (추후 내용 추가되면 수정).
+
+<br><br>
+
 # 풀 라우트 캐시(Full Route Cache)
 
 - Next 서버측에서 빌드 타임에 특정 페이지의 렌더링 결과를 캐싱하는 기능.
@@ -33,6 +37,8 @@
   - fallback으로 전달된 대체 ui로 대신됨.
   - Suspense로 감싸인 컴포넌트는 브라우저에 마운트가 되었을 때, 렌더링이 진행.
 
+<br><br>
+
 ## 동적 경로 적용
 
 - Static Page 로는 적용할 수 없음.
@@ -55,6 +61,8 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 ```
 
+<br><br>
+
 # 라우트 세그먼트 옵션
 
 - 강제로 특정 페이지의 동작을 강제로 설정.
@@ -71,6 +79,8 @@ export const dynamic = "auto";
 - error : 페이지를 강제로 Static 페이지로 설정.
   - 쿼리스트링 등으로 Static으로 설정하면 안되는 이유가 있다면 빌드 오류 발생.
 - 특별한 이유가 없다면 권장되지는 않음.
+
+<br><br>
 
 # 클라이언트 라우터 캐시
 

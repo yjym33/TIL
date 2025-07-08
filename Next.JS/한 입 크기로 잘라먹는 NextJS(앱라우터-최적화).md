@@ -1,3 +1,7 @@
+### 이정환 강사님의 한 입 크기로 잘라먹는 Next.js강의를 들으며 정리한 내용 (추후 내용 추가되면 수정).
+
+<br><br>
+
 # 이미지 최적화
 
 - http archive에 따르면 이미지는 평균적으로 웹페이지 용량의 58%를 차지.
@@ -31,6 +35,8 @@ const nextConfig = {
 export default nextConfig;
 ```
 
+<br><br>
+
 # 검색 엔진 최적화 SEO
 
 - 방법.
@@ -39,6 +45,8 @@ export default nextConfig;
   - 시멘틱 태그 설정.
   - 메타 데이터 설정.
   - ...
+
+<br><br>
 
 ## 메타 데이터 설정
 

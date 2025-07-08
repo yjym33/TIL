@@ -1,3 +1,7 @@
+### 이정환 강사님의 한 입 크기로 잘라먹는 Next.js강의를 들으며 정리한 내용 (추후 내용 추가되면 수정).
+
+<br><br>
+
 # 데이터 페칭
 
 ```tsx
@@ -21,6 +25,8 @@ export async function Page(props) {
     // private로 설정.
     // 클라이언트 컴포넌트에서도 접근할 수 있도록 하려면 해당 NEXT_PUBLIC이 필요함
 ```
+
+<br><br>
 
 # 데이터 캐시
 
@@ -46,6 +52,8 @@ const response  await fetch(`~/api`, {cache:'force-cache'});
 - { next : { tags : ['a'] } }
   - 요청이 들어왔을 때 데이터를 최신화.
   - On-Demand Revalidate
+
+<br><br>
 
 # 리퀘스트 메모이제이션
 

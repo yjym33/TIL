@@ -1,3 +1,7 @@
+### 이정환 강사님의 한 입 크기로 잘라먹는 Next.js강의를 들으며 정리한 내용 (추후 내용 추가되면 수정).
+
+<br><br>
+
 # 스트리밍
 
 - 잘게 쪼게진 작은 용량의 데이터를 클라이언트로 연속적으로 전송하는 기술.
@@ -7,6 +11,8 @@
   - 일단 뭐라도 빠르게 보여줄 수 있음.
   - 로딩바 같은 대체 UI 표시 등.
 - Dynamic page에 자주 사용됨.
+
+<br><br>
 
 ## 페이지 스트리밍 적용
 
@@ -27,6 +33,8 @@ export default Loading;
 - async 로 이루어진, 비동기로 작동하도록 설정된 페이지에만 스트리밍을 제공.
 - loading.tsx는 페이지 컴포넌트에만 적용 가능.
 - 브라우저에서 쿼리 스트링이 변경될 때는 적용되지 않음.ex) search?q=abc 에서 search?q=123 이 될 땐 적용되지 않음.이 경우엔 suspense를 적용해야 함.
+
+<br><br>
 
 ## 컴포넌트 스트리밍 적용
 
@@ -64,6 +72,7 @@ export default function Page({
 ```
 
 - Suspense 컴포넌트로 감싼 컴포넌트는 스트리밍 되도록 설정됨.
+
   - fallback 으로 대체 UI 가 설정됨.
   - loading.tsx 와 동일하게 쿼리스트링이 변경될 때는 적용되지 않음.
 
@@ -79,12 +88,16 @@ export default function Page({
   - fallback에 스켈레톤 UI 컴포넌트 전달 가능.
     - 스켈레톤 UI : 뼈대 역할을 하는 UI. 사용자 경험을 상승시킬 수 있음.
 
+<br><br>
+
 ## 에러 핸들링
 
 - try-catch 블록.
 - `error.tsx` 파일 설정.
+
   - layout.tsx 와 같이 적용하려는 파일과 동일 경로에 생성.
   - layout.tsx 와 같이 경로 아래의 모든 페이지에 적용됨.
+
   ```tsx
   "use client";
 
@@ -102,6 +115,7 @@ export default function Page({
 
   export default Error;
   ```
+
   - `"use client"` 적용.
     - 서버와 클라이언트 측 모두의 오류를 대응하기 위함.
   - `reset` : 에러가 발생한 페이지를 복구하기 위해 다시 컴포넌트를 렌더링 시키는 함수.

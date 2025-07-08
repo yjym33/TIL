@@ -1,3 +1,7 @@
+### 이정환 강사님의 한 입 크기로 잘라먹는 Next.js강의를 들으며 정리한 내용 (추후 내용 추가되면 수정).
+
+<br><br>
+
 ```tsx
 $ npx create-next-app@rc
 npx : Node Package Executor
@@ -6,11 +10,15 @@ npx : Node Package Executor
 
 ![](https://velog.velcdn.com/images/938938/post/ee4a9b26-e872-4556-b533-69208eed2141/image.png)
 
+<br><br>
+
 # 페이지 라우팅 설정
 
 - `page.tsx` 파일만 페이지로 설정 됨.(search.tsx, index.tsx 등 X)
   - ~/search : app/search/page.tsx
   - ~/book/1 : app/book/[id]/page.tsx
+
+<br><br>
 
 ## 쿼리 스트링 사용
 
@@ -39,12 +47,16 @@ const SearchPage = ({
 export default SearchPage;
 ```
 
+<br><br>
+
 # 레이아웃 설정
 
 - `layout.tsx` 파일으로 레이아웃 적용.
 - /app/search/layout.tsx : /search/page.tsx의 레이아웃으로 설정됨.
   - /search로 시작하는 모든 페이지에 적용. (/search/setting/page.tsx 등)
   - /search/setting/layout.tsx 가 존재할 경우, 중첩되어서 적용.
+
+<br><br>
 
 ## 라우트 그룹
 
@@ -53,7 +65,11 @@ export default SearchPage;
   - 각기 다른 경로를 가지는 페이지를 하나의 폴더 안에 묶을 수 있음.
   - 일정 페이지에만 동일한 layout을 적용할 때 사용.
 
+<br><br>
+
 # 리액트 서버 컴포넌트
+
+<br>
 
 ## 서버 컴포넌트란?
 
@@ -68,6 +84,8 @@ export default SearchPage;
   - `"use client"`
   - useHook은 클라이언트 컴포넌트에서만 사용 가능.
 - Link는 html 고유의 기능. javascript의 기능에 해당되지 않기 때문에 클라이언트 컴포넌트를 적용해야하는 상호작용에 해당하지 않음.
+
+<br><br>
 
 ## 주의사항
 
@@ -93,6 +111,8 @@ export default SearchPage;
     - 객체, 배열, 클래스 등의 복잡한 구조의 데이터를 네트워크 상으로 전송하기 위해 아주 단순한 형태(문자열, byte)로 변환하는 것.
     - ex) const person = {name:'abc', age:10}=> {"name":"abc","age":10}
     - 함수는 직렬화가 불가능 함.
+
+<br><br>
 
 # 네비게이팅
 
