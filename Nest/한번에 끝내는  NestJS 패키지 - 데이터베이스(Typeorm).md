@@ -1,4 +1,4 @@
-![alt text](codeFactory.png)
+![alt text](/Nest/image/codeFactory.png)
 출처 : https://fastcampus.co.kr/dev_online_nestjs
 
 ## 설치 및 설정
@@ -791,7 +791,7 @@ const maximum = await repository.maximum("age", { firstName: "Timber" });
 
 <br>
 
-![alt text](Image6.png)
+![alt text](/Nest/image/Image6.png)
 
 <br>
 
@@ -810,7 +810,7 @@ const maximum = await repository.maximum("age", { firstName: "Timber" });
 
 <br>
 
-![alt text](Image8.png)
+![alt text](/Nest/image/Image8.png)
 
 <br>
 
@@ -819,7 +819,7 @@ const maximum = await repository.maximum("age", { firstName: "Timber" });
 
 <br>
 
-![alt text](Image9.png)
+![alt text](/Nest/image/Image9.png)
 
 <br>
 
@@ -827,13 +827,13 @@ const maximum = await repository.maximum("age", { firstName: "Timber" });
 
 <br>
 
-![alt text](Image10.png)
+![alt text](/Nest/image/Image10.png)
 
 <br>
 
 <br>
 
-![alt text](Image11.png)
+![alt text](/Nest/image/Image11.png)
 
 <br>
 
@@ -841,7 +841,7 @@ const maximum = await repository.maximum("age", { firstName: "Timber" });
 
 <br>
 
-![alt text](Image12.png)
+![alt text](/Nest/image/Image12.png)
 
 <br>
 
@@ -884,7 +884,7 @@ export class User {
 
 <br>
 
-![alt text](image13.png)
+![alt text](/Nest/image/image13.png)
 
 <br>
 

@@ -1,4 +1,4 @@
-![alt text](codeFactory.png)
+![alt text](/Nest/image/codeFactory.png)
 출처 : https://fastcampus.co.kr/dev_online_nestjs
 
 <br><br>
@@ -40,7 +40,7 @@ validate(user).then((error) => {
 });
 ```
 
-![alt text](image3.png)
+![alt text](/Nest/image/image3.png)
 
 ### **반환 에러 구조**
 

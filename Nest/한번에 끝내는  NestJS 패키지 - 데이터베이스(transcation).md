@@ -1,4 +1,4 @@
-![alt text](codeFactory.png)
+![alt text](/Nest/image/codeFactory.png)
 출처 : https://fastcampus.co.kr/dev_online_nestjs
 
 ## Transaction
@@ -9,19 +9,19 @@
 
   <br>
 
-![alt text](image14.png)
+![alt text](/Nest/image/image14.png)
 
 <br>
 
-![alt text](image15.png)
+![alt text](/Nest/image/image15.png)
 
 <br>
 
-![alt text](image16.png)
+![alt text](/Nest/image/image16.png)
 
 <br>
 
-![alt text](image17.png)
+![alt text](/Nest/image/image17.png)
 
 <br>
 
@@ -160,7 +160,7 @@ SELECT * FROM account WHERE balance > 1000; -- account 2 and account 3 반환 (p
 COMMIT;
 ```
 
-![alt text](image18.png)
+![alt text](/Nest/image/image18.png)
 
 ## Transaction 문법
 

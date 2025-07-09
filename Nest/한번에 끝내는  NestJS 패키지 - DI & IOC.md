@@ -1,4 +1,4 @@
-![alt text](codeFactory.png)
+![alt text](/Nest/image/codeFactory.png)
 출처 : https://fastcampus.co.kr/dev_online_nestjs
 
 <br><br>

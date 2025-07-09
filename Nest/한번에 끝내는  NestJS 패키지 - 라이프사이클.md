@@ -1,11 +1,11 @@
-![alt text](codeFactory.png)
+![alt text](/Nest/image/codeFactory.png)
 출처 : https://fastcampus.co.kr/dev_online_nestjs
 
 <br><br>
 
 ## 🧭 NestJS 요청 라이프사이클
 
-![NestJS 요청 흐름도](image2.png)
+![NestJS 요청 흐름도](/Nest/image/image2.png)
 
 ---
 
