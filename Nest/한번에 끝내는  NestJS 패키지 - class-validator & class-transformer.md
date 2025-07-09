@@ -1,4 +1,11 @@
+![alt text](codeFactory.png)
+출처 : https://fastcampus.co.kr/dev_online_nestjs
+
+<br><br>
+
 ## class-validator & class-transformer
+
+<br>
 
 ## **Class Validator의 특성**
 
@@ -7,6 +14,8 @@
 - Class Validator 자체적으로 제공해주는 Validator들을 사용 할 수 있다
 - 커스텀 Validator를 쉽게 만들 수 있다
 - 커스텀 에러 메세지를 반환 할 수 있다
+
+<br>
 
 ### **class Validator 적용 예제**
 
@@ -53,6 +62,8 @@ validate(user).then((error) => {
 - constraints: 검증 실패한 제약조건
 - children: 프로퍼티의 모든 검증 실패 제약 조건
 
+<br><br>
+
 ### **커스텀 에러 메세지**
 
 ```jsx
@@ -72,7 +83,11 @@ class User {
 }
 ```
 
+<br>
+
 - Decorator의 message 프로퍼티에 검증 실패했을때의 에러 메세지를 입력해주면 된다.
+
+<br>
 
 ```jsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -208,6 +223,8 @@ export class UpdateMovieDto {
 
 ```
 
+<br>
+
 ## **Class Transformer 특성**
 
 - TS Decorator를 사용해서 클래스를 변환한다 (Validate)
@@ -215,6 +232,8 @@ export class UpdateMovieDto {
 - 중첩된 (Nested) 객체에도 매우 쉽게 적용 가능하다
 - 커스텀 Transformer로 어떤 변환이든 가능하다
 - Class Validator를 제작한 개발자가 시작한 프로젝트다
+
+<br>
 
 ## Class Transformer 적용 예제
 
@@ -244,6 +263,8 @@ const plain = classToPlain(user);
 // { email: 'JOHN@EXAMPLE.COM' }
 console.log(plain);
 ```
+
+<br>
 
 ## 중첩 클래스 변환
 
@@ -277,6 +298,8 @@ const user = plainToClass(User, plainUser);
 console.log(user);
 ```
 
+<br>
+
 ## Custom Transformer
 
 ```jsx
@@ -301,199 +324,221 @@ const user = plainToClass(User, plainUser);
 console.log(user.email);
 ```
 
-- 참고
+<br><br>
 
-  ### **class-transformer이 지원하는 기능**
+## 참고
 
-  ### **plainToClass**
+### class-transformer이 지원하는 기능
 
-  앞선 코드에서 보았던 plainToClass method 입니다. 이것은 자바스크립트 객체를 특정 클래스의 인스턴스로 변환합니다.
+<br>
 
-  ```jsx
-  import { plainToClass } from "class-transformer";
+## plainToClass
 
-  let users = plainToClass(User, userJson); // to convert user plain object a single user. also supports arrays
-  ```
+앞선 코드에서 보았던 plainToClass method 입니다. 이것은 자바스크립트 객체를 특정 클래스의 인스턴스로 변환합니다.
 
-  ### **classToPlain**
+```jsx
+import { plainToClass } from "class-transformer";
 
-  이 method는 클래스를 객체를 일반 자바스크립트 객체로 다시 변환합니다.
+let users = plainToClass(User, userJson); // to convert user plain object a single user. also supports arrays
+```
 
-  ```jsx
-  import { classToPlain } from "class-transformer";
-  let photo = classToPlain(photo);
-  ```
+<br>
 
-  ### **instanceToInstance**
+## classToPlain
 
-  이 method는 클래스 객체를 새로운 인스턴스로 변환합니다. 객체를 전체 복제한다고 보시면 됩니다.
+이 method는 클래스를 객체를 일반 자바스크립트 객체로 다시 변환합니다.
 
-  ```jsx
-  import { instanceToInstance } from "class-transformer";
-  let photo = instanceToInstance(photo);
-  ```
+```jsx
+import { classToPlain } from "class-transformer";
+let photo = classToPlain(photo);
+```
 
-  ### **serialize & deserialize**
+<br>
 
-  직렬화와 역직렬화는 아래 코드처럼 사용할 수 있습니다. 데이터 크기를 줄여서 주고 받을 때 사용합니다.
+## instanceToInstance
 
-  ```jsx
-  import { serialize, deserialize, deserializeArray } from "class-transformer";
-  let photo = serialize(photo);
+이 method는 클래스 객체를 새로운 인스턴스로 변환합니다. 객체를 전체 복제한다고 보시면 됩니다.
 
-  let photo = deserialize(Photo, photo);
+```jsx
+import { instanceToInstance } from "class-transformer";
+let photo = instanceToInstance(photo);
+```
 
-  let photos = deserializeArray(Photo, photos); // 배열을 역직렬화합니다.
-  ```
+<br>
 
-  ## 제네릭을 활용한 API 함수
+## serialize & deserialize
 
-  앞서 다룬 plainToClass는 계속해서 호출해야 한다는 단점이 있습니다.
-  이것이 귀찮다면 별도의 함수를 만들어서 사용할 수 있습니다.
+직렬화와 역직렬화는 아래 코드처럼 사용할 수 있습니다. 데이터 크기를 줄여서 주고 받을 때 사용합니다.
 
-  ```jsx
-  export const instance: AxiosInstance = axios.create({
-    responseType: 'json',
-    validateStatus(status) {
-      return [200].includes(status);
-    },
-  });
+```jsx
+import { serialize, deserialize, deserializeArray } from "class-transformer";
+let photo = serialize(photo);
 
-  export async *function* request<T>(
-    config: AxiosRequestConfig,
-    classType: any,
-  ): Promise<T> {
-    const response = await instance.request<T>(config);
-    return plainToClass<T, AxiosResponse['data']>(classType, response.data);
+let photo = deserialize(Photo, photo);
+
+let photos = deserializeArray(Photo, photos); // 배열을 역직렬화합니다.
+```
+
+<br>
+
+## 제네릭을 활용한 API 함수
+
+앞서 다룬 plainToClass는 계속해서 호출해야 한다는 단점이 있습니다.
+이것이 귀찮다면 별도의 함수를 만들어서 사용할 수 있습니다.
+
+```jsx
+export const instance: AxiosInstance = axios.create({
+  responseType: 'json',
+  validateStatus(status) {
+    return [200].includes(status);
+  },
+});
+
+export async *function* request<T>(
+  config: AxiosRequestConfig,
+  classType: any,
+): Promise<T> {
+  const response = await instance.request<T>(config);
+  return plainToClass<T, AxiosResponse['data']>(classType, response.data);
+}
+```
+
+위와 같이 말이죠. Axios를 많이 사용하기 때문에 Axios 객체로 만들었는데요. 비슷하게 다른 곳에서도 제네릭으로 만들 수 있습니다.
+
+```jsx
+export *class* PaginatedResponseDto<T> {
+
+  @Exclude()
+  private type: Function;
+
+  @Expose()
+  @ApiProperty()
+  @Type(opt => (opt.newObject as PaginatedResponseDto<T>).type)
+  data: T[];
+
+  constructor(type: Function) {
+    this.type = type;
   }
-  ```
+}
+```
 
-  위와 같이 말이죠. Axios를 많이 사용하기 때문에 Axios 객체로 만들었는데요. 비슷하게 다른 곳에서도 제네릭으로 만들 수 있습니다.
+위 코드는 NestJS에서 많이 사용하는 코드입니다. DTO 클래스를 만들 때 제네릭을 통해 리터럴 객체를 클래스 객체로 자동으로 변환합니다.
+위와 같이 작성하면 Request 요청 중 Post로 받을 때 body json을 자동으로 클래스 객체로 치환해줍니다. 그리고 데코레이터 설정에 따라 필요한 값을 매핑하거나 제외할 수 있습니다. 그리고 복잡한 Type도 대응해서 매핑이 가능합니다.
 
-  ```jsx
-  export *class* PaginatedResponseDto<T> {
+<br>
 
-    @Exclude()
-    private type: Function;
+## 중첩 객체 매핑
 
-    @Expose()
-    @ApiProperty()
-    @Type(opt => (opt.newObject as PaginatedResponseDto<T>).type)
-    data: T[];
+클래스 내부에는 일반 속성 뿐만 아니라 다른 클래스를 넣어 사용하는 중첩된 객체도 존재합니다. 물론 일반 리터럴 객체에도 중첩된 값들이 들어갈 수 있습니다. 이것을 매핑하기 위해서는 @Type 데코레이터를 사용합니다.
 
-    constructor(type: Function) {
-      this.type = type;
-    }
-  }
-  ```
+```jsx
+import { Type, plainToClass } from 'class-transformer';
 
-  위 코드는 NestJS에서 많이 사용하는 코드입니다. DTO 클래스를 만들 때 제네릭을 통해 리터럴 객체를 클래스 객체로 자동으로 변환합니다.
-  위와 같이 작성하면 Request 요청 중 Post로 받을 때 body json을 자동으로 클래스 객체로 치환해줍니다. 그리고 데코레이터 설정에 따라 필요한 값을 매핑하거나 제외할 수 있습니다. 그리고 복잡한 Type도 대응해서 매핑이 가능합니다.
+export *class* Album {
+  id: number;
 
-  ## 중첩 객체 매핑
+  name: string;
 
-  클래스 내부에는 일반 속성 뿐만 아니라 다른 클래스를 넣어 사용하는 중첩된 객체도 존재합니다. 물론 일반 리터럴 객체에도 중첩된 값들이 들어갈 수 있습니다. 이것을 매핑하기 위해서는 @Type 데코레이터를 사용합니다.
+  @Type(() => Photo)
+  photos: Photo[];
+}
 
-  ```jsx
-  import { Type, plainToClass } from 'class-transformer';
+export *class* Photo {
+  id: number;
+  filename: string;
+}
 
-  export *class* Album {
-    id: number;
+let album = plainToClass(Album, albumJson);
+```
 
-    name: string;
+위와 같이 Type 데코레이터를 통해 중첩된 객체를 클래스로 매핑 할 수 있습니다.
 
-    @Type(() => Photo)
-    photos: Photo[];
-  }
+<br>
 
-  export *class* Photo {
-    id: number;
-    filename: string;
-  }
+## 데코레이터
 
-  let album = plainToClass(Album, albumJson);
-  ```
+<br>
 
-  위와 같이 Type 데코레이터를 통해 중첩된 객체를 클래스로 매핑 할 수 있습니다.
+## Expose
 
-  ## 데코레이터
+expose 데코레이터는 getter 또는 method에 사용할 수 있으며, 사용하면 반환하는 내용을 노출할 수 있습니다.
 
-  ### **@Expose**
+```jsx
+import { Expose } from "class-transformer";
 
-  expose 데코레이터는 getter 또는 method에 사용할 수 있으며, 사용하면 반환하는 내용을 노출할 수 있습니다.
+export class User {
+  @Expose({ name: "uid" })
+  id: number;
+  firstName: string;
+  lastName: string;
+  password: string;
 
-  ```jsx
-  import { Expose } from "class-transformer";
-
-  export class User {
-    @Expose({ name: "uid" })
-    id: number;
-    firstName: string;
-    lastName: string;
-    password: string;
-
-    @Expose()
-    get name() {
-      return this.firstName + " " + this.lastName;
-    }
-
-    @Expose()
-    getFullName() {
-      return this.firstName + " " + this.lastName;
-    }
-  }
-  ```
-
-  ### **@Exclude**
-
-  특정 속성을 제외해서 반환을 막을 수 있습니다.
-
-  ```jsx
-  import { Exclude } from "class-transformer";
-
-  export class User {
-    id: number;
-
-    email: string;
-
-    @Exclude({ toPlainOnly: true })
-    password: string;
-  }
-  ```
-
-  ### **@Type**
-
-  일반 자바스크립트 객체를 다양한 형태로 변환하는 데코레이터입니다.
-  날짜 문자열을 Date 객체로 반환하고, 배열로 변경하거나, Transform 데코레이터를 활용하여 추가 데이터 변환을 할 수 있습니다.
-
-  ```jsx
-  import { Type } from "class-transformer";
-  import * as moment from "moment";
-  import { Moment } from "moment";
-
-  export class Skill {
-    name: string;
+  @Expose()
+  get name() {
+    return this.firstName + " " + this.lastName;
   }
 
-  export class Weapon {
-    name: string;
-    range: number;
+  @Expose()
+  getFullName() {
+    return this.firstName + " " + this.lastName;
   }
+}
+```
 
-  export class Player {
-    name: string;
+<br>
 
-    @Type(() => Date)
-    registrationDate: Date;
+## @Exclude
 
-    @Type(() => Date)
-    @Transform(({ value }) => moment(value), { toClassOnly: true })
-    date: Moment;
+특정 속성을 제외해서 반환을 막을 수 있습니다.
 
-    @Type(() => Skill)
-    skills: Set<Skill>;
+```jsx
+import { Exclude } from "class-transformer";
 
-    @Type(() => Weapon)
-    weapons: Map<string, Weapon>;
-  }
-  ```
+export class User {
+  id: number;
+
+  email: string;
+
+  @Exclude({ toPlainOnly: true })
+  password: string;
+}
+```
+
+<br>
+
+## @Type
+
+일반 자바스크립트 객체를 다양한 형태로 변환하는 데코레이터입니다.
+날짜 문자열을 Date 객체로 반환하고, 배열로 변경하거나, Transform 데코레이터를 활용하여 추가 데이터 변환을 할 수 있습니다.
+
+```jsx
+import { Type } from "class-transformer";
+import * as moment from "moment";
+import { Moment } from "moment";
+
+export class Skill {
+  name: string;
+}
+
+export class Weapon {
+  name: string;
+  range: number;
+}
+
+export class Player {
+  name: string;
+
+  @Type(() => Date)
+  registrationDate: Date;
+
+  @Type(() => Date)
+  @Transform(({ value }) => moment(value), { toClassOnly: true })
+  date: Moment;
+
+  @Type(() => Skill)
+  skills: Set<Skill>;
+
+  @Type(() => Weapon)
+  weapons: Map<string, Weapon>;
+}
+```

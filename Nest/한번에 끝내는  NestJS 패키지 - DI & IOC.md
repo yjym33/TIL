@@ -1,4 +1,20 @@
-일반 인스턴스화
+![alt text](codeFactory.png)
+출처 : https://fastcampus.co.kr/dev_online_nestjs
+
+<style>
+  .card {
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #1e1e1e;
+    color: white;
+  }
+</style>
+
+<br><br>
+
+## 일반 인스턴스화
 
 ```jsx
 class A {
@@ -10,7 +26,9 @@ class A {
 class B {}
 ```
 
-### **Dependency Injection**
+<br><br>
+
+## Dependency Injection
 
 ```jsx
 class A {
@@ -22,11 +40,15 @@ class A {
 class B {}
 ```
 
+<br>
+
 클래스 A가 클래스 B에 의존하고 있고, 클래스 B를 클래스 A에서 사용해야 할떄, 클래스 A에서 직접 B를 생성하는 것이 아닌 외부에서 B 인스턴스를 생성자(constructor)를 사용하여 A에 주입하여 넣어주는 방식을 (Dependencty Injection) 이라고 한다.
 
-### I**nversion of Control (제어의 역전)**
+<br><br>
 
-IoC Container
+## Inversion of Control (제어의 역전)
+
+### IoC Container
 
 ```jsx
 class B {}
@@ -44,14 +66,26 @@ class C {
 }
 ```
 
+<br>
+
 **IoC Container**라는 별도의 관리 주체가 객체들의 생성과 생명주기를 관리하며, 필요할 때 Dependency Injection을 수행해 객체 간의 의존성을 해결해 줍니다. 이렇게 제어의 흐름을 개발자가 직접 담당하지 않고, IoC 컨테이너가 대신 관리하는 것을 Inversion of Control이라고 합니다.
+
+<br><br>
 
 ![alt text](image.png)
 
+<br><br>
+
 ## 추가 설명 (GPT 기반)
 
-## 1. 제어의 역전 (IoC: Inversion of Control)
+<br>
 
+<details open>
+  <summary>
+  <strong> 1. 제어의 역전 (IoC: Inversion of Control)</strong>
+  </summary>
+
+ <div class="card"> 
 ### ✅ 개념
 
 - 전통적인 방식에서는 클래스나 함수 내부에서 필요한 의존성을 **직접 생성(new)** 해서 사용합니다.
@@ -81,13 +115,25 @@ class UserService {
 
 여기서 `UserRepository` 객체는 개발자가 생성하지 않고, NestJS의 **IoC 컨테이너**가 대신 생성해서 `UserService`에 주입해 줍니다.
 
-## 📌 2. 의존성 주입 (DI: Dependency Injection)
+</div>
+</details>
 
+<br><br>
+
+<details open>
+
+ <summary>
+  <strong> 2. 의존성 주입 (DI: Dependency Injection)</strong>
+  </summary>
+
+<div class="card">
 ### ✅ 개념
 
 - 의존성 주입은 **필요한 의존 객체를 외부에서 전달(주입)** 하는 디자인 패턴입니다.
 - NestJS에서는 클래스가 필요로 하는 의존성을 **생성자(constructor)** 를 통해 주입합니다.
 - NestJS는 내부적으로 **IoC 컨테이너**를 통해 의존성을 관리하고 주입합니다.
+
+<br>
 
 ## NestJS에서 DI/IoC가 적용된 구조 예시
 
@@ -155,6 +201,12 @@ import { UserController } from "./user.controller";
 export class AppModule {}
 ```
 
+</div>
+
+</details>
+
+<br>
+
 ## 🔁 요약
 
 | 개념              | 설명                                                                                   |
@@ -162,3 +214,5 @@ export class AppModule {}
 | IoC (제어의 역전) | 객체 생성과 흐름 제어를 프레임워크에 맡김                                              |
 | DI (의존성 주입)  | 필요한 의존성을 외부에서 주입 받음 (주로 생성자를 통해)                                |
 | NestJS에서 역할   | `@Injectable()`로 클래스를 주입 대상(Provider)으로 등록하고, 생성자 주입으로 DI를 활용 |
+
+  </div>
