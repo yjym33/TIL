@@ -136,3 +136,231 @@ Singleton b = Singleton.getInstance();
 - 모듈들이 더욱더 분리돼 클래스 수 증가
 - 복잡성 증가
 - 약간의 런타임 패널티
+
+## 팩토리 패턴
+
+### 팩토리 패턴 (factory pattern) 이란?
+
+- 객체를 사용하는 코드에서 객체 생성 부분을 떼어내 추상화한 패턴
+- 상속 관계에서 상위 클래스가 중요한 뼈대를 결정, 하위 클래스에서 객체 생성에 관한 구체적인 내용 결정
+  - 두 클래스 분리 -> 느슨한 결합
+  - 상위 클래스 -> 더 많은 유연성 (생성 방식 몰라도 됨)
+  - 유지 보수성 증가
+
+## 자바스크립트 팩토리 패턴
+
+- 자바스크립스의 new Object로 전달받은 값에 따라 다른 객체 생성
+
+```js
+const num = new Object(42);
+const str = new Object("abc");
+num.constructor.name; // Number
+num.constructor.name; // String
+```
+
+### 팩토리 패턴 활용 자바스크립트 예시 코드
+
+```js
+class Latte {
+  constructor() {
+    this.name = "latte";
+  }
+}
+
+class Espresso {
+  constructor() {
+    this.name = "Espresso";
+  }
+}
+
+class LatteFactory {
+  static createCoffee() {
+    return new Latte();
+  }
+}
+
+class EspressoFactory {
+  static createCoffee() {
+    return new Espresso();
+  }
+}
+
+const factoryList = { LatteFactory, EspressoFactory };
+
+class CoffeeFactory {
+  static createCoffee(type) {
+    const factory = factoryList[type];
+    return factory.createCoffee();
+  }
+}
+
+const main = () => {
+  // 라떼 커피를 주문
+  const coffee = CoffeeFactory.createCoffee("LatteFactory");
+  // 커피 이름을 부름
+  console.log(coffee.name); // latte
+};
+```
+
+- LatteFactory에서 생성한 인스턴스를 CoffeeFactory에서 주입하기 때문에 의존성 주입으로도 볼 수가 있다.
+- static 정적 메서드 -> 객체를 만들지 않고도 호출 가능, 메모리 할당 한 번만 실행
+
+<br>
+
+### 팩토리 패턴 활용 자바 예시 코드
+
+```java
+abstract class Coffee{
+	public abstract int getPrice();
+
+	@Override
+	public String toString(){
+		return "Hi this coffee is " + this.getPrice();
+	}
+}
+
+class CoffeeFactory{
+	public static Coffee getCoffee(String type, int price){
+		if("Latte".equalsIgnore(type)) return new Latte(price);
+		else if("Americano".equalsIgnore(type)) return new Americano(price);
+		else return new DefaultCoffee();
+	}
+}
+```
+
+<br>
+
+## 전략 패턴
+
+### 전략 패턴 (strategy pattern) 이란?
+
+- 객체의 행위를 바꾸고 싶은 경우 '직접' 수정하지 않고 전략이라고 부르는 '캡슐화한 알고리즘'을 컨텍스트 안에서 바꿔주면서 상호 교체가 가능하게 만드는 패턴
+
+### 실 사용 예시
+
+- Node.js의 인증 모듈 구현 : passport 라이브러리
+  - LocalStrategy 전략 : 회원가입된 아이디와 비밀번호를 기반으로 인증
+  - OAuth 전략 : 페이스북, 네이버 등 다른 서비스를 기반으로 인증
+
+### 전략 패턴 자바 예시 코드
+
+- 쇼핑 카트에 아이템을 담아 LUNACard 또는 KAKAOCard라는 두개의 전략으로 결제하는 코드
+
+```java
+
+interface PaymentStrategy{
+	public void pay(int amount);
+}
+
+class KAKAOCardStrategy implements PaymentStrategy{
+	private String name;
+	private String cardNumber;
+	private String cvv;
+	private String dateOfExpiry;
+
+	public KAKAOCardStrategy(String nm, String ccNum, String cvv, String expiryDate){
+		this.name = nm;
+		this.cardNumber = ccNum;
+		this.cvv = cvv;
+		this.dateOfExpiry = expiryDate;
+	}
+
+	@Override
+	public void pay(int amount){
+		System.out.println(amount + " paid using KAKAOCard.");
+	}
+}
+
+class LUNACardStrategy implements PaymentStrategy{
+	private String emailId;
+	private String password;
+
+	public LUNACardStrategy(String email, String pwd){
+		this.emailId = email;
+		this.password = pwd;
+	}
+
+	@Override
+	public void pay(int amount){
+		System.out.println(amount + " paid using LUNACard.")
+	}
+}
+
+class Item{
+	private String name;
+	private int price;
+	public Item(String name, int cost){
+		this.name = name;
+		this.price = cost;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public int getPrice(){
+		return price;
+	}
+}
+
+class ShoppingCart{
+	List<Item> items;
+
+	public ShoppingCart(){
+		this.items = new ArrayList<Item>();
+	}
+
+	public void addItem(Item item){
+		this.items.add(item);
+	}
+
+	public void removeItem(Item item){
+		this.items.remove(item);
+	}
+
+	public int calculateTotal(){
+		int sum = 0;
+		for(Item item: items)
+			sum += item.getPrice();
+		return sum;
+	}
+
+	public void pay(PaymentStrategy paymentMethod){
+		int amount = calculateTotal();
+		paymentMethod.pay(amount);
+	}
+}
+
+public class StrategyPattern{
+	public static void main(String[] args){
+		ShoppingCart cart = new ShoppingCart();
+
+		Item A = new Item("kundolA",100);
+		Item B = new Item("kundolB",200);
+
+		cart.addItem(A);
+		cart.addItem(B);
+
+		// pay by LUNACard
+		cart.pay(new LUNACardStrategy("kundol@example.com","temppwd"));
+
+		// pay by KAKAOCard
+		cart.pay(new KAKAOCardStrategy("Yijun","1234","123","8/13"));
+	}
+}
+
+/*
+300 paid using LUNACard.
+400 paid using KAKAOCard.
+*/
+```
+
+<br>
+
+<!-- ## 옵저버 패턴
+
+### 옵저버 패턴 (observer pattern) 이란?
+
+- 주체가 어떤 객체의 상태 변화를 관찰하다가 상태 변화가 있을 때마다 메서드 등을 통해 옵저버 목록에 있는 옵저버들에게 변화를 알려주는 디자인 패턴
+  - 주체 : 객체의 상태 변화를 보고 있는 관찰자
+  - 옵저버 : 객체의 상태 변화에 따라 전달되는 메서드 등을 기반으로 '추가 변화 사항'이 생기는 객체 -->
