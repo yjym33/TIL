@@ -512,3 +512,76 @@ b.형규 = "솔로";
 b.형규 = "커플";
 // 형규가 [솔로] >> [커플] 로 변경되었습니다.
 ```
+
+<br>
+
+## 프록시 패턴
+
+### 프록시 패턴 (proxy pattern) 이란?
+
+- 대상 객체에 접근하기 전 그 접근에 대한 흐름을 가로채 대상 객체 앞단의 인터페이스 역할을 하는 디자인 패턴
+- 객체의 속성, 변환등을 보완
+- 보안, 데이터 검증, 캐싱, 로깅에 사용
+
+### 프록시 서버 (proxy server) 란?
+
+- 서버와 클라 사이에서 클라가 자신을 통해 다른 네트워크 서비스에 간접적으로 접속할 수 있게 해주는 시스템이나 응용 프로그램
+
+## Nginx
+
+### nginx란?
+
+- nginx는 비동기 이벤트 기반의 구조와 다수의 연결을 효과적으로 처리 가능한 웹 서버
+- 주로 Node.js 서버 앞단의 프록시 서버로 활용
+  - 실제 서버의 포트를 숨기고, 정적 자원을 gzip 압축, 메인 서버 앞단에서의 로깅 가능
+    -> 익명의 사용자가 서버의 직접 접근 차단, 보안 강화
+
+## CloudFlare
+
+### CloudFlare란?
+
+- CloudFlare는 웹 서버 앞단에 프록시 서버로 두어 DDOS 공격 방어나 HTTPS 구축에 쓰임
+- 의심스러운 트래픽인지 먼저 판단해 CAPTCHA 등을 기반으로 막아주기도 함
+
+<br>
+
+`DDOS 공격` : DDOS는 짧은 시간 동안 네트워크에 많은 요청을 보내 네트워크를 마비시켜 웹사이트의 가용성을 방해하는 사이버 공격 유형  
+`HTTPS 구축` : 서버에서 HTTPS를 구축할 때, CloudFlare는 별도의 인증서 없이 손쉽게 가능
+
+<br>
+
+## CORS
+
+참고 : https://www.youtube.com/watch?v=j2Q2Ev6CZzQ
+
+### CORS (Cross-Origin Resource Sharing) 란?
+
+- CORS는 서버가 웹 브라우저 리소스를 로드할 때 다른 오리진을 통해 로드하지 못하게 하는 HTTP 헤더 기반 메커니즘 -> 프록시 서버를 두어 프론트엔트 서버에서 요청되는 오리진을 서버와 맞게 바꿈
+- SOP : Same Origin Policy 를 지키기 위함
+
+<br>
+
+`오리진` : 프로토콜과 호스트 이름, 포트의 조합 <br>
+ex) https://yijun.com:8080
+
+<br>
+
+## Preflight request
+
+### Preflight request란?
+
+- GET, HEAD, POST, [Content-Type 헤더]... 등과 같은 Simple request와는 달리,
+  PUT, DELETE와 같은 request는 OPTION 메서드로 CORS인지 한 번 더 요청하는 과정을 거침 - 물론 캐싱 가능
+
+### 프록시 객체 활용 자바스크립트 예시 코드
+
+```javascript
+const handler = {
+  get: function(target, name){
+    return name === 'name' ? `${} ${}` : target[name]
+  }
+}
+
+const p = new Proxy({a: 'I', b: 'AM GANGPLANK ZANGIN'}, handler)
+console.log(p.name) // I AM GANGPLANK ZANGIN
+```
