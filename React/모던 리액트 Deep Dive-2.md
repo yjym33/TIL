@@ -1,3 +1,6 @@
+![alt text](/React/image/모던리액트DeepDive.png) <br>
+출처 : https://www.yes24.com/product/goods/123161563
+
 ## JSX
 
 - 트랜스파일러를 거쳐야 JS 런타임이 이해할 수 있는 코드로 변환된다.
