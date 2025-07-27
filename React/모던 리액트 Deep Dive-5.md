@@ -389,12 +389,10 @@ export default function App() {
 Facebook에서 개발한 상태 관리 라이브러리
 리액트에서 훅의 개념으로 상태 관리를 시작한 최초의 라이브러리
 
-RecoilRoot
+### RecoilRoot
 
-Recoil 애플리케이션을 감싸는 최상위 컴포넌트
-Recoil 에서 생성되는 상태값을 저장하기 위한 스토어를 생성함.
-
-import { RecoilRoot } from 'recoil';
+- Recoil 애플리케이션을 감싸는 최상위 컴포넌트
+- Recoil 에서 생성되는 상태값을 저장하기 위한 스토어를 생성함.
 
 ```jsx
 import { RecoilRoot } from "recoil";
