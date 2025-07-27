@@ -374,4 +374,93 @@ export default function App() {
 }
 ```
 
-- 상태 관리 라이브러리 관련 파트는 정리하지 않았습니다. (추후 정리 예정)
+<br>
+
+## 상태 관리 라이브러리 Recoil, Jotai, Zustand 살펴보기
+
+### Recoil, Zustand, Jotai, Valtio에 이르기까지
+
+- 훅이라는 새로운 패러다임의 등장에 따라 훅을 활용해 상태를 가져오거나 관리할 수 있는 다양한 라이브러리가 등장했다.
+
+- 기존의 리덕스 같은 라이브러리와 다르게 훅을 활용해 작은 크기의 상태를 효율적으로 관리한다.
+
+- 페이스북이 만든 상태 관리 라이브러리 Recoil
+
+Facebook에서 개발한 상태 관리 라이브러리
+리액트에서 훅의 개념으로 상태 관리를 시작한 최초의 라이브러리
+
+RecoilRoot
+
+Recoil 애플리케이션을 감싸는 최상위 컴포넌트
+Recoil 에서 생성되는 상태값을 저장하기 위한 스토어를 생성함.
+
+import { RecoilRoot } from 'recoil';
+
+```jsx
+import { RecoilRoot } from "recoil";
+
+function App() {
+  return <RecoilRoot>{/* 하위 컴포넌트들 */}</RecoilRoot>;
+}
+```
+
+- Recoil의 상태값은 RecoilRoot로 생성된 Context의 스토어에 저장된다.
+- 스토어의 상태값에 접근할 수 있는 함수들이 있고, 이 함수를 활용해 상태값에 접근하거나 상태값을 변경할 수 있다.
+- 값의 변경이 발생하면 이를 참조하고 있는 하위 컴포넌트에 모두 알린다.
+
+### atom
+
+- 상태를 나타내는 Recoil의 최소 상태 단위
+- atom은 key값을 필수로 가지며, 이 키는 다른 atom과 구별하는 식별자가 되는 필수 값이다. (유일한 값)
+
+```jsx
+import { atom } from "recoil";
+
+const countState = atom({
+  key: "countState", // 고유 식별자
+  default: 0, // 초기값
+});
+```
+
+<br>
+
+### useRecoilValue
+
+- atom의 값을 읽어오는 훅, 값이 변경될 때마다 리렌더링 한다.
+
+```jsx
+import { useRecoilValue } from "recoil";
+
+function Counter() {
+  const count = useRecoilValue(countState);
+
+  return <div>Count: {count}</div>;
+}
+```
+
+<br>
+
+### useRecoilState
+
+- useState와 유사하게 값을 가져오고, 이 값을 변경할 수 있는 훅
+
+```jsx
+import { useRecoilState } from "recoil";
+
+function Counter() {
+  const [count, setCount] = useRecoilState(countState);
+
+  const increment = () => setCount(count + 1);
+  const decrement = () => setCount(count - 1);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  );
+}
+```
+
+- RecoilRoot를 선언해 하나의 스토어를 만들고, atom이라는 상태 단위를 RecoilRoot 에서 만든 스토어에 등록한다. atom은 Recoil에서 관리하는 작은 상태 관리이며, 각 값은 고유한 key를 바탕으로 구별된다. 그리고 컴포넌트는 Recoil에서 제공하는 훅을 통해 atom의 상태 변화를 구독하고, 값이 변경되면 forceUpdate같은 기법을 통해 리렌더링을 실행해 최신 atom값을 가져오게 된다.
