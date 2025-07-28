@@ -384,10 +384,14 @@ export default function App() {
 
 - 기존의 리덕스 같은 라이브러리와 다르게 훅을 활용해 작은 크기의 상태를 효율적으로 관리한다.
 
-- 페이스북이 만든 상태 관리 라이브러리 Recoil
+<br>
+
+## 페이스북이 만든 상태 관리 라이브러리 Recoil
 
 Facebook에서 개발한 상태 관리 라이브러리
 리액트에서 훅의 개념으로 상태 관리를 시작한 최초의 라이브러리
+
+<br>
 
 ### RecoilRoot
 
@@ -405,6 +409,8 @@ function App() {
 - Recoil의 상태값은 RecoilRoot로 생성된 Context의 스토어에 저장된다.
 - 스토어의 상태값에 접근할 수 있는 함수들이 있고, 이 함수를 활용해 상태값에 접근하거나 상태값을 변경할 수 있다.
 - 값의 변경이 발생하면 이를 참조하고 있는 하위 컴포넌트에 모두 알린다.
+
+<br>
 
 ### atom
 
@@ -462,3 +468,165 @@ function Counter() {
 ```
 
 - RecoilRoot를 선언해 하나의 스토어를 만들고, atom이라는 상태 단위를 RecoilRoot 에서 만든 스토어에 등록한다. atom은 Recoil에서 관리하는 작은 상태 관리이며, 각 값은 고유한 key를 바탕으로 구별된다. 그리고 컴포넌트는 Recoil에서 제공하는 훅을 통해 atom의 상태 변화를 구독하고, 값이 변경되면 forceUpdate같은 기법을 통해 리렌더링을 실행해 최신 atom값을 가져오게 된다.
+
+<br>
+
+## Recoil에서 영감을 받은, 그러나 조금 더 유연한 Jotai
+
+- 상향식 접근법(작은 단위의 상태를 위로 전파할 수 있는 구조)
+- context의 문제점인 불필요한 리렌더링이 일어난다는 문제를 해결하고자 설계돼 있고, 추가적으로 개발자들이 메모이제이션이나 최적화를 거치지 않아도 리렌더링이 발생되지 않도록 설계되 있다.
+
+<br>
+
+### atom
+
+- 최소 단위의 상태
+- atom 하나만으로도 상태를 만들 수도, 아예 파생된 상태를 만들 수 있다.
+
+```jsx
+import { atom } from "jotai";
+
+// atom 정의
+export const countAtom = atom(0); // 초기값 0을 가진 countAtom
+```
+
+<br>
+
+### useAtomValue
+
+- 특정 atom 값을 읽어오는 훅
+- 이 훅으로 atom의 현재 값에 접근할 수 있다.
+
+```jsx
+import { useAtomValue } from "jotai";
+import { countAtom } from "./atoms";
+
+function CounterComponent() {
+  const count = useAtomValue(countAtom);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+    </div>
+  );
+}
+```
+
+<br>
+
+### useAtom
+
+- useState와 동일한 형태의 배열을 반환한다.
+  - 첫 번째 : atom의 현재 값을 나타내는 useAtomValue 훅의 결과
+  - 두 번쨰 : useSetAtom훅 반환 (atom을 수정할수 있음)
+
+```jsx
+import { useAtom } from "jotai";
+import { countAtom } from "./atoms";
+
+function CounterComponent() {
+  const [count, setCount] = useAtom(countAtom);
+
+  const increment = () => setCount((prevCount) => prevCount + 1);
+  const decrement = () => setCount((prevCount) => prevCount - 1);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  );
+}
+```
+
+<br>
+
+## 작고 빠르며 확장에도 유연한 Zustand
+
+- 리덕스에서 영감을 받음
+- atom이 아닌 Zustand에서는 하나의 스토어를 중앙 집중형으로 활용해 이 스토어 내부에서 상태를 관리하고 있다.
+
+```jsx
+import create from "zustand";
+
+// Zustand 스토어 생성
+const useStore = create((set) => ({
+  // 초기 상태
+  count: 0,
+
+  // setState 함수 정의
+  // partial: 상태의 일부분만 업데이트
+  // replace: 상태를 완전히 새로운 값으로 교체
+  setState: {
+    partial: (newState) => set((state) => ({ ...state, ...newState })),
+    replace: (newState) => set(newState),
+  },
+
+  // 구독 및 리스너 관리
+  subscribe: (listener) => {
+    const listeners = new Set();
+    listeners.add(listener);
+
+    // 상태 변경 시 리스너 호출
+    const unsubscribe = () => {
+      listeners.delete(listener);
+    };
+
+    return unsubscribe;
+  },
+
+  // 리스너 초기화 함수
+  destroy: () => {
+    // 구독 취소 및 리스너 초기화
+  },
+}));
+
+const store = useStore();
+
+// getState, setState, subscribe, destroy를 반환하는 createStore 함수
+const createStore = () => ({
+  getState: () => store.getState(),
+  setState: store.setState,
+  subscribe: store.subscribe,
+  destroy: store.destroy,
+});
+
+export default createStore;
+```
+
+useStore 함수: Zustand의 create 함수를 사용하여 스토어를 생성한다. create 함수는 콜백 함수를 인자로 받으며, 이 콜백 함수 내에서 상태와 상태 변경 함수를 정의한다.
+
+- count: 초기 상태로 사용할 값
+- setState: 상태 업데이트를 위한 여러 메서드를 포함한 객체
+  - partial: 상태의 일부분만 업데이트
+  - replace: 상태를 완전히 새로운 값으로 교체
+- subscribe: 상태 변경을 구독하고, 변경 시에 호출할 리스너를 관리하는 함수
+- destroy: 리스너 초기화 및 상태 정리를 위한 함수
+
+<br>
+
+createStore 함수: Zustand에서 반환된 useStore를 기반으로 createStore 함수를 정의한다. 이 함수는 getState, setState, subscribe, destroy를 반환하여 외부에서 상태 관리를 할 수 있게 한다.
+
+- getState: 현재 상태 값을 가져오는 함수
+- setState: 상태를 업데이트하는 함수
+- subscribe: 상태 변화를 구독하고, 리스너를 추가 및 제거할 수 있는 함수
+- destroy: 리스너를 초기화하고 상태를 정리하는 함수
+
+<br>
+
+| 항목                  | Recoil                                                             | Jotai                                                | Zustand                                     |
+| --------------------- | ------------------------------------------------------------------ | ---------------------------------------------------- | ------------------------------------------- |
+| **기본 개념**         | React의 Context API를 기반으로 한 상태 관리 라이브러리             | 최소한의 API와 React Hooks 기반 상태 관리 라이브러리 | 전역 상태 관리를 위한 경량 React 라이브러리 |
+| **상태 관리 방식**    | Atom 기반 상태 관리                                                | Atom 기반 상태 관리                                  | 전역 상태 객체 기반 관리                    |
+| **상태 접근**         | `useRecoilState`, `useRecoilValue`, `useSetRecoilState` Hooks 사용 | `useAtom` Hook 사용                                  | `useStore` Hook 사용                        |
+| **상태 변경**         | `set` 함수를 통해 상태 변경                                        | `set` 함수를 통해 상태 변경                          | `setState` 함수를 통해 상태 변경            |
+| **비동기 처리**       | 비동기 상태 관리 지원                                              | 비동기 상태 관리 지원                                | 비동기 상태 관리 지원                       |
+| **성능**              | 최소한의 리렌더링 수행                                             | 최소한의 리렌더링 수행                               | 빠른 성능                                   |
+| **API 복잡도**        | 비교적 복잡한 API                                                  | 간단한 API                                           | 간단한 API                                  |
+| **React Native 지원** | 지원                                                               | 지원                                                 | 지원                                        |
+| **TypeScript 지원**   | 지원                                                               | 지원                                                 | 지원                                        |
+
+<br>
+
+![alt text](/React/image/상태관리점유율.png) <br>
