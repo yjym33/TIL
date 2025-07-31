@@ -277,4 +277,245 @@ console.log("테스트 성공");
   - throws: 에러 던지는지 여부
 
 > 테스트 코드가 정상적으로 작동하고, 테스트도 모두 통과하겠지만 무엇을 테스트했는지,무슨 테스트를 어떻게 수행했는지 등 테스트에 관한 실제 정보를 알 수 없다. \*\*좋은 테스트 코드는 다양한 테스트 코드가 작성되고 통과하는 것뿐만 아니라 어떤 테스트가 무엇을 테스트하는지 일목요연하게 보여주는 것도 중요하다.
-> -> 스팅 프레임워크 (Jest, Mocha, Karma, Jasmine)
+> -> 테스팅 프레임워크 (Jest, Mocha, Karma, Jasmine)
+
+<br>
+
+### Jest
+
+- 자체적으로 제작한 expect 패키지를 사용해 어설션을 수행한다.
+
+```js
+// sum.js
+function sum(a, b) {
+  return a + b;
+}
+
+module.exports = sum;
+```
+
+<br>
+
+```js
+// sum.test.js
+const sum = require("./sum");
+
+test("1 더하기 2는 3이어야 한다", () => {
+  expect(sum(1, 2)).toBe(3);
+});
+
+test("-1 더하기 1은 0이어야 한다", () => {
+  expect(sum(-1, 1)).toBe(0);
+});
+```
+
+- 리액트 컴포넌트 테스트 코드 작성하기
+
+1. 컴포넌트를 렌더링한다.
+2. 필요하다면 컴포넌트에서 특정 액션을 수행한다.
+3. 컴포넌트 렌더링과 2번의 액션을 통해 기대하는 결과와 실제 결과를 비교한다.
+
+<br>
+
+### [리액트 컴포넌트에서 테스트하는 일반적인 시나리오는 특정한 무언가를 지닌 HTML 요소가 있는지의 여부 → 👇🏻이를 확인하는 방법 👇🏻]
+
+- getBy…: 인수의 조건에 맞는 요소 반환, 해당 요소가 없거나 두 개 이상이면 에러 발생, 복수 개를 찾고 싶으면 getAllBy…
+- findBy…: getBy…와 거의 유사하나 Promise를 반환하기에 비동기로 찾음, 기본값은 1000ms, 복수 개를 찾고 싶으면 findAllBy… 사용, 이런 특징 때문에 findBy는 비동기 액션 이후에 요소를 찾을 때 사용
+- queryBy…: 찾지 못하면 null을 반환, 에러를 발생시키고 싶지 않을 때 사용, 다만 복수 개를 찾았을 땐 에러를 발생, 복수 개를 찾고 싶다면 queryAllBy… 사용
+
+<br>
+
+### 정적 컴포넌트
+
+상태(state)를 가지지 않고, 항상 같은 결과를 반환하는 리액트 컴포넌트
+일반적으로 입력값(props)에 따라 정적으로 UI를 렌더링하며, 상호작용 없이 정적으로 존재하는 경우가 많다.
+
+- beforeEach: 각 테스트(it)를 수행하기 전 실행하는 함수
+- describe: 비슷한 속성을 가진 테스트를 하나의 그룹으로 묶는 역할, 필수적인 메소드는 아니며 describe 내부에 describe를 또 사용 가능
+- it: test와 완전히 동일함, 축약어
+- testId: 리액트 테스팅 라이브러리의 예약어로, get 등의 선택자로 선택하기 어렵거나 곤란한 요소를 선택하기 위해 사용 가능, HTML DOM 요소에 testId 데이터셋을 선언해 두면 이후 테스트 시에 getByTestId, findByTestId 등으로 선택이 가능
+
+<br>
+
+> 데이터셋
+> HTML의 특정 요소와 관련된 임의 정보를 추가할 수 있는 HTML 속성, HTML 특정요소에 data-로 시작하는 속성은 무엇이든 사용할수 있다.
+
+<br>
+
+### 동적 컴포넌트
+
+상태(state)를 가지고 사용자와의 상호작용에 따라 동적으로 UI가 변화하는 리액트 컴포넌트 <br> ex) 사용자 입력에 따라 화면이 업데이트되거나 API 호출에 따라 데이터가 동적으로 표시되는 경우
+
+- userEvent.type: userEvent.type은 사용자가 타이핑하는 것을 흉내내는 메소드, @testing-library/react에서 제공하는 fireEvent와는 차이가 있음, 기본적으로 userEvent는 fireEvent의 여러 이벤트를 순차적으로 실행해 좀 더 자세하게 사용자 작동을 흉내냄 ex) userEvent.click = fireEvent.mouseOver → fireEvent.mouseMove → fireEvent.mouseDown → fireEvent.mouseUp → fireEvent.click
+- maxLength는 사용자가 한번에 입력하는 경우엔 작동하지 않음, 그럴 땐 userEvent 사용
+  jest.spyOn(window, ‘alert’).mockImplementation(): spyOn은 특정 객체의 메서드를 오염시키지 않고 단순히 관찰 용도로 사용 가능
+- mockImplementation: 해당 메서드에 대한 모킹 구현, 현재 Jest를 실행하는 Nodㅌ e.js 환경에는 window.alert이 없으므로 mock function으로 구현이 필요
+
+<br>
+
+ex) 비동기 이벤트가 발생하는 컴포넌트
+
+```jsx
+import { MouseEvent, useState } from 'react'
+
+interface TodoResponse {
+  userId: number
+  id: number
+  title: string
+  completed: false
+}
+
+export function FetchComponent() {
+  const [data, setData] = useState<TodoResponse | null>(null)
+  const [error, setError] = useState<number | null>(null)
+
+  async function handleButtonClick(e: MouseEvent<HTMLButtonElement>) {
+    const id = e.currentTarget.dataset.id
+
+    const response = await fetch(`/todos/${id}`)
+
+    if (response.ok) {
+      const result: TodoResponse = await response.json()
+      setData(result)
+    } else {
+      setError(response.status)
+    }
+  }
+
+  return (
+    <div>
+      <p>{data === null ? '불러온 데이터가 없습니다.' : data.title}</p>
+
+      {error && <p style={{ backgroundColor: 'red' }}>에러가 발생했습니다</p>}
+
+      <ul>
+        {Array.from({ length: 10 }).map((_, index) => {
+          const id = index + 1
+          return (
+            <button key={id} data-id={id} onClick={handleButtonClick}>
+              {`${id}번`}
+            </button>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
+```
+
+<br>
+
+> 모킹이란? <br>
+> 테스트 환경에서 특정 객체, 함수 또는 네트워크 요청 등의 동작을 모방하여 가짜 데이터를 제공하고, 실제 코드가 이를 통해 정상적으로 작동하는지 확인하는 기법
+
+<br>
+
+단순 모킹하는 것만으로는 모든 시나리오를 해결할 순 없기 때문에 등장한 것이 MSW(Mock Service Worker)
+
+MSW는 Node.js나 브라우저 모두 사용할 수 있는 모킹 라이브러리로, 브라우저에서는 서비스 워커를 활용해 실제 네트워크 요청을 가로채는 방식으로 모킹을 구현하고, Node.js 환경에서는 https나 XMLHttpRequest의 요청을 가로채는 방식으로 작동한다. 즉, 동일하게 fetch 요청을 하되 중간에 MSW가 감지하고 미리 준비한 모킹 데이터를 제공하는 방식으로, fetch의 모든 기능을 그대로 사용하면서도 응답에 대해서만 모킹할 수 있으므로 fetch를 모킹하는 것이 훨씬 수월해진다.
+
+```jsx
+import { fireEvent, render, screen } from "@testing-library/react";
+import { rest } from "msw";
+import { setupServer } from "msw/node";
+import { FetchComponent } from ".";
+
+// 모킹된 응답 데이터
+const MOCK_TODO_RESPONSE = {
+  userId: 1,
+  id: 1,
+  title: "delectus aut autem",
+  completed: false,
+};
+
+// MSW를 사용하여 모킹 서버 설정
+const server = setupServer(
+  rest.get("/todos/:id", (req, res, ctx) => {
+    const todoId = req.params.id;
+
+    // 요청된 todoId가 유효하면 모킹된 응답 데이터를 반환
+    if (Number(todoId)) {
+      return res(ctx.json({ ...MOCK_TODO_RESPONSE, id: Number(todoId) }));
+    } else {
+      return res(ctx.status(404));
+    }
+  })
+);
+
+// 테스트 시작 전에 MSW 서버를 시작
+beforeAll(() => server.listen());
+
+// 모든 테스트가 종료된 후 MSW 서버를 닫음
+afterAll(() => server.close());
+
+// 각 테스트 전에 FetchComponent를 렌더링
+beforeEach(() => {
+  render(<FetchComponent />);
+});
+
+// FetchComponent에 대한 테스트 그룹
+describe("FetchComponent 테스트", () => {
+  // 테스트 1: 기본 문구 확인
+  it("데이터를 불러오기 전에는 기본 문구가 뜬다.", async () => {
+    // "불러온 데이터가 없습니다." 문구가 화면에 표시되는지 확인
+    const nowLoading = screen.getByText(/불러온 데이터가 없습니다./);
+    expect(nowLoading).toBeInTheDocument();
+  });
+
+  // 테스트 2: 데이터 로드 확인
+  it("버튼을 클릭하면 데이터를 불러온다.", async () => {
+    // "1번" 버튼을 클릭
+    const button = screen.getByRole("button", { name: /1번/ });
+    fireEvent.click(button);
+
+    // MOCK_TODO_RESPONSE의 title이 화면에 표시되는지 확인
+    const data = await screen.findByText(MOCK_TODO_RESPONSE.title);
+    expect(data).toBeInTheDocument();
+  });
+
+  // 테스트 3: 서버 요청 에러 처리 확인
+  it("버튼을 클릭하고 서버요청에서 에러가 발생하면 에러문구를 노출한다.", async () => {
+    // 서버 응답을 에러 상태로 모킹
+    server.use(
+      rest.get("/todos/:id", (req, res, ctx) => {
+        return res(ctx.status(503));
+      })
+    );
+
+    // "1번" 버튼을 클릭
+    const button = screen.getByRole("button", { name: /1번/ });
+    fireEvent.click(button);
+
+    // 에러 메시지가 화면에 표시되는지 확인
+    const error = await screen.findByText(/에러가 발생했습니다/);
+    expect(error).toBeInTheDocument();
+  });
+});
+```
+
+<br>
+
+### 사용자 정의 훅 테스트하기
+
+- react-hooks-testing-library을 통해 테스트
+- 위 라이브러리를 사용하면 굳이 테스트를 위한 컴포넌트를 만들지 않아도 훅을 간편하게 테스트 할 수 있다.
+
+<br>
+
+### 테스트를 작성하기에 앞서 고려해야 할 점
+
+테스트 커버리지를 100%까지 끌어올릴 상황은 생각보다 드물다. TDD(Test Driven Development) 테스트 주도 개발)를 차용하더라도 프론트엔드 코드는 사용자의 입력이 매우 자유로워 모든 상황을 커버해 테스트를 작성하기란 불가능하다.
+
+→ 애플리케이션에서 가장 취약하거나 중요한 부분을 파악하기!!
+무작성 테스트 코드를 작성하지 말고, 가장 핵심이 되는 부분에서 먼저 테스트 코드를 하나씩 작성해 나가는 것이 중요하다.
+
+<br>
+
+### 그 밖에 해볼 만한 여러 가지 테스트
+
+- 프론트엔드에서의 여러 가지 테스트
+
+  - 유닛 테스트(Unit Test): 각각의 코드나 컴포넌트가 독립적으로 분리된 환경에서 의도된 대로 작동 테스트
+  - 통합 테스트(Integration Test): 유닛 테스트를 통과한 여러 컴포넌트가 묶여서 하나의 기능으로 작동 테스트
+  - 엔드 투 엔드(End to End Test): 흔히 E2E 테스트라 하며, 실제 사용자처럼 작동하는 로봇을 활용해 애플리케이션 전체적인 기능 테스트
